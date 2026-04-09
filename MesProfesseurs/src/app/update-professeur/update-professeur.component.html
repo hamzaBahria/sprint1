@@ -1,0 +1,53 @@
+<div class="container">
+  <div>
+    <h2>Modifier un Professeur :</h2>
+  </div>
+  <form>
+    <div readonly class="col-sm-2 col-md-2 col-lg-2">
+      <label>ID Professeur</label>
+      <input
+        type="text"
+        [(ngModel)]="currentProfesseur.idProfesseur"
+        name="idProfesseur"
+        class="form-control"
+      />
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+      <label>Nom Professeur</label>
+      <input
+        type="text"
+        [(ngModel)]="currentProfesseur.nomProfesseur"
+        name="nomProfesseur"
+        class="form-control"
+      />
+    </div>
+    <div class="col-sm-2 col-md-2 col-lg-2">
+      <label>Salaire Professeur</label>
+      <input
+        type="number"
+        [(ngModel)]="currentProfesseur.salaireProfesseur"
+        name="salaireProfesseur"
+        class="form-control"
+      />
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+      <label>Date création</label>
+      <input
+        type="date"
+        [ngModel]="currentProfesseur.dateCreation | date: 'yyyy-MM-dd'"
+        (ngModelChange)="currentProfesseur.dateCreation = $event"
+        name="dateCreation"
+        class="form-control"
+      />
+    </div>
+    <div class="mt-2">
+      <button
+        type="submit"
+        (click)="updateProfesseur()"
+        class="btn btn-success"
+      >
+        Modifer
+      </button>
+    </div>
+  </form>
+</div>
