@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Professeur } from '../model/professeur.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfesseurService } from '../services/professeur.service';
+import { Matiere } from '../model/matiere.model';
 
 @Component({
   selector: 'app-update-professeur',
@@ -14,6 +15,9 @@ import { ProfesseurService } from '../services/professeur.service';
 })
 export class UpdateProfesseurComponent implements OnInit {
   currentProfesseur = new Professeur();
+  matieres!: Matiere[];
+  updatedMatId!: number;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -21,15 +25,26 @@ export class UpdateProfesseurComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.currentProfesseur = this.professeurService.consulterProfesseur(
-      this.activatedRoute.snapshot.params['id'],
-    );
-    console.log(this.currentProfesseur);
+    this.professeurService
+      .consulterProfesseur(this.activatedRoute.snapshot.params['id'])
+      .subscribe((prof) => {
+        this.currentProfesseur = prof;
+        this.updatedMatId = this.currentProfesseur.matiere.idMat!;
+      });
+    this.professeurService.listeMatieres().subscribe((mats) => {
+      this.matieres = mats._embedded.matieres;
+      console.log(mats);
+    });
   }
 
   updateProfesseur() {
-    //console.log(this.currentProfesseur);
-    this.professeurService.updateProfesseur(this.currentProfesseur);
-    this.router.navigate(['professeurs']);
+    this.currentProfesseur.matiere = this.matieres.find(
+      (mat) => mat.idMat == this.updatedMatId,
+    )!;
+    this.professeurService
+      .updateProfesseur(this.currentProfesseur)
+      .subscribe((prof) => {
+        this.router.navigate(['professeurs']);
+      });
   }
 }

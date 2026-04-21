@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 
+import com.hamza.professeurs.etities.Matiere;
 import com.hamza.professeurs.etities.Professeur;
 
 @SpringBootApplication
@@ -20,7 +21,7 @@ public class ProfesseurApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		repositoryRestConfiguration.exposeIdsFor(Professeur.class);
+		repositoryRestConfiguration.exposeIdsFor(Professeur.class, Matiere.class);
 	}
 
 }

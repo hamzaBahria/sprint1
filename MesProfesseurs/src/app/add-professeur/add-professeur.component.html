@@ -3,7 +3,7 @@
     <h2>Ajouter un Professeur :</h2>
   </div>
   <form>
-    <div class="col-sm-2 col-md-2 col-lg-2">
+    <div hidden class="col-sm-2 col-md-2 col-lg-2">
       <label>ID Professeur</label>
       <input
         type="text"
@@ -39,13 +39,24 @@
         class="form-control"
       />
     </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+      <label>Matieres</label>
+      <select
+        class="form-control form-control-lg"
+        id="idMat"
+        name="idMat"
+        [(ngModel)]="newIdMat"
+      >
+        @for (mat of matieres; track mat.idMat) {
+          <option [value]="mat.idMat">{{ mat.nomMatiere }}</option>
+        }
+      </select>
+    </div>
+
     <div class="mt-2">
       <button type="submit" (click)="addProfesseur()" class="btn btn-success">
         Ajouter
       </button>
-      <div>
-        <h3>{{ message }}</h3>
-      </div>
     </div>
   </form>
 </div>

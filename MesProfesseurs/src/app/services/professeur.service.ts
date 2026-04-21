@@ -1,66 +1,91 @@
 import { Injectable } from '@angular/core';
 import { Professeur } from '../model/professeur.model';
+import { Matiere } from '../model/matiere.model';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { enviroment } from '../../enviroments/enviroment';
+import { MatiereWrapped } from '../model/MatiereWrapped';
+import { AuthService } from './auth.service';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+};
+
 @Injectable({
   providedIn: 'root',
 })
 export class ProfesseurService {
-  professeurs: Professeur[];
+  professeurs!: Professeur[];
   professeur!: Professeur;
-  constructor() {
-    this.professeurs = [
-      {
-        idProfesseur: 1,
-        nomProfesseur: 'Hamza',
-        salaireProfesseur: 3000.5,
-        dateCreation: new Date('01/14/2025'),
-      },
-      {
-        idProfesseur: 2,
-        nomProfesseur: 'Ali',
-        salaireProfesseur: 2500.0,
-        dateCreation: new Date('12/17/2026'),
-      },
-      {
-        idProfesseur: 3,
-        nomProfesseur: 'Adem',
-        salaireProfesseur: 1500.5,
-        dateCreation: new Date('02/20/2026'),
-      },
-    ];
+  matieres!: Matiere[];
+  apiURLMat: string = 'http://localhost:8080/professeurs/mat';
+  apiURL: string = 'http://localhost:8080/professeurs/api';
+
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+  ) {
+    // this.matieres = [
+    //   { idMat: 1, nomMatiere: 'Math', description: 'this is math' },
+    //   { idMat: 2, nomMatiere: 'Algo', description: 'this is algo' },
+    // ];
+    // this.professeurs = [
+    //   {
+    //     idProfesseur: 1,
+    //     nomProfesseur: 'Hamza',
+    //     salaireProfesseur: 3000.5,
+    //     dateCreation: new Date('01/14/2025'),
+    //     matiere: { idMat: 1, nomMatiere: 'Math', description: 'this is math' },
+    //   },
+    //   {
+    //     idProfesseur: 2,
+    //     nomProfesseur: 'Ali',
+    //     salaireProfesseur: 2500.0,
+    //     dateCreation: new Date('12/17/2026'),
+    //     matiere: { idMat: 2, nomMatiere: 'Algo', description: 'this is algo' },
+    //   },
+    //   {
+    //     idProfesseur: 3,
+    //     nomProfesseur: 'Adem',
+    //     salaireProfesseur: 1500.5,
+    //     dateCreation: new Date('02/20/2026'),
+    //     matiere: { idMat: 1, nomMatiere: 'Math', description: 'this is math' },
+    //   },
+    // ];
   }
 
-  listeProfesseurs(): Professeur[] {
-    return this.professeurs;
+  listeProfesseur(): Observable<Professeur[]> {
+    return this.http.get<Professeur[]>(this.apiURL + '/all');
   }
-  ajouterProfesseur(prof: Professeur) {
-    this.professeurs.push(prof);
+  ajouterProfesseur(prof: Professeur): Observable<Professeur> {
+    return this.http.post<Professeur>(this.apiURL + '/addprof', prof);
+  }
+  supprimerProfesseur(id: number) {
+    const url = `${this.apiURL}/delprof/${id}`;
+
+    return this.http.delete(url);
+  }
+  consulterProfesseur(id: number): Observable<Professeur> {
+    const url = `${this.apiURL}/getbyid/${id}`;
+
+    return this.http.get<Professeur>(url);
+  }
+  updateProfesseur(prof: Professeur): Observable<Professeur> {
+    return this.http.put<Professeur>(this.apiURL + '/updateprof', prof);
   }
 
-  supprimerProfesseur(prof: Professeur) {
-    //supprimer le produit prod du tableau produits
-    const index = this.professeurs.indexOf(prof, 0);
-    if (index > -1) {
-      this.professeurs.splice(index, 1);
-    }
-    //ou Bien
-    /* this.professeurs.forEach((cur, index) => {
-    if(prof.idProfesseur === cur.idProfesseur) {
-    this.idProfesseurs.splice(index, 1);
-    }
-    }); */
+  listeMatieres(): Observable<MatiereWrapped> {
+    return this.http.get<MatiereWrapped>(this.apiURLMat);
   }
-
-  consulterProfesseur(id: number): Professeur {
-    this.professeur = this.professeurs.find((p) => p.idProfesseur == id)!;
-    return this.professeur;
+  rechercherParMatiere(idMat: number): Observable<Professeur[]> {
+    const url = `${this.apiURL}/profsmat/${idMat}`;
+    return this.http.get<Professeur[]>(url);
   }
-
-  updateProfesseur(prof: Professeur) {
-    //chercher le produit prod du tableau produits
-    const index = this.professeurs.indexOf(prof, 0);
-    if (index > -1) {
-      this.professeurs.splice(index, 1); //supprimer l'ancien éléments
-      this.professeurs.splice(index, 0, prof); // insérer le nouvel élément
-    }
+  rechercherParNom(nom: string): Observable<Professeur[]> {
+    const url = `${this.apiURL}/profsByName/${nom}`;
+    return this.http.get<Professeur[]>(url);
+  }
+  ajouterMatiere(mat: Matiere): Observable<Matiere> {
+    return this.http.post<Matiere>(this.apiURLMat, mat, httpOptions);
   }
 }

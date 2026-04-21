@@ -13,6 +13,7 @@
               <th>Nom</th>
               <th>Salaire</th>
               <th>Date Création</th>
+              <th>Matieres</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -32,20 +33,26 @@
               <td>{{ professeur.nomProfesseur }}</td>
               <td>{{ professeur.salaireProfesseur }}</td>
               <td>{{ professeur.dateCreation | date: "dd/MM/yyyy" }}</td>
-              <td>
-                <a
-                  class="btn btn-danger"
-                  (click)="supprimerProfesseur(professeur)"
-                  >Supprimer</a
-                >
-              </td>
-              <td>
-                <a
-                  class="btn btn-success"
-                  [routerLink]="['/updateProfesseur', professeur.idProfesseur]"
-                  >Modifier</a
-                >
-              </td>
+              <td>{{ professeur.matiere!.nomMatiere }}</td>
+              @if (authService.isAdmin()) {
+                <td>
+                  <a
+                    class="btn btn-danger"
+                    (click)="supprimerProfesseur(professeur)"
+                    >Supprimer</a
+                  >
+                </td>
+                <td>
+                  <a
+                    class="btn btn-success"
+                    [routerLink]="[
+                      '/updateProfesseur',
+                      professeur.idProfesseur,
+                    ]"
+                    >Modifier</a
+                  >
+                </td>
+              }
             </tr>
           </tbody>
           @if (last) {
