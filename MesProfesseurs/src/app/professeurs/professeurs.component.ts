@@ -5,7 +5,7 @@ import { ProfesseurService } from '../services/professeur.service';
 import { RouterLink } from '@angular/router';
 import { Matiere } from '../model/matiere.model';
 import { AuthService } from '../services/auth.service';
-
+import { Image } from '../model/image.model';
 @Component({
   selector: 'app-professeurs',
   standalone: true,
@@ -15,6 +15,8 @@ import { AuthService } from '../services/auth.service';
 })
 export class ProfesseursComponent implements OnInit {
   professeurs!: Professeur[];
+
+  apiurl: string = 'http://localhost:8080/professeurs/api';
 
   constructor(
     private professeurService: ProfesseurService,
@@ -26,10 +28,8 @@ export class ProfesseursComponent implements OnInit {
   ngOnInit(): void {
     this.chargerProfesseur();
   }
-
   chargerProfesseur() {
     this.professeurService.listeProfesseur().subscribe((profs) => {
-      console.log(profs);
       this.professeurs = profs;
     });
   }

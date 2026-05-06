@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { enviroment } from '../../enviroments/enviroment';
 import { MatiereWrapped } from '../model/MatiereWrapped';
 import { AuthService } from './auth.service';
-
+import { Image } from '../model/image.model';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
@@ -87,5 +87,39 @@ export class ProfesseurService {
   }
   ajouterMatiere(mat: Matiere): Observable<Matiere> {
     return this.http.post<Matiere>(this.apiURLMat, mat, httpOptions);
+  }
+
+  uploadImage(file: File, filename: string): Observable<Image> {
+    const imageFormData = new FormData();
+    imageFormData.append('image', file, filename);
+    const url = `${this.apiURL + '/image/upload'}`;
+    return this.http.post<Image>(url, imageFormData);
+  }
+  loadImage(id: number): Observable<Image> {
+    const url = `${this.apiURL + '/image/get/info'}/${id}`;
+    return this.http.get<Image>(url);
+  }
+
+  uploadImageProf(
+    file: File,
+    filename: string,
+    idProf: number,
+  ): Observable<any> {
+    const imageFormData = new FormData();
+    imageFormData.append('image', file, filename);
+    const url = `${this.apiURL + '/image/uplaodImageProf'}/${idProf}`;
+    return this.http.post(url, imageFormData);
+  }
+
+  supprimerImage(id: number) {
+    const url = `${this.apiURL}/image/delete/${id}`;
+    return this.http.delete(url, httpOptions);
+  }
+
+  uploadImageFS(file: File, filename: string, idProf: number): Observable<any> {
+    const imageFormData = new FormData();
+    imageFormData.append('image', file, filename);
+    const url = `${this.apiURL + '/image/uploadFS'}/${idProf}`;
+    return this.http.post(url, imageFormData);
   }
 }

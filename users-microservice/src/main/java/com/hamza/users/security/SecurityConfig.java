@@ -5,6 +5,7 @@ import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -38,16 +39,19 @@ public class SecurityConfig {
 						cors.setAllowedMethods(Collections.singletonList("*"));
 						cors.setAllowedHeaders(Collections.singletonList("*"));
 						cors.setExposedHeaders(Collections.singletonList("Authorization"));
+						cors.setMaxAge(3600L);
 						return cors;
 					}
 				}))
 
-				.authorizeHttpRequests(requests -> requests.requestMatchers("/login").permitAll()
+				.authorizeHttpRequests(requests -> 
+				requests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+						.requestMatchers("/login","/register/**","/verifyEmail/**").permitAll()
 						.requestMatchers("/all").hasAuthority("ADMIN").anyRequest().authenticated())
 
-				.addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class);
 
-				.addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+			
 
 		return http.build();
 	}

@@ -4,7 +4,7 @@ import { Professeur } from '../model/professeur.model';
 import { ProfesseurService } from '../services/professeur.service';
 import { Router } from '@angular/router';
 import { Matiere } from '../model/matiere.model';
-
+import { Image } from '../model/image.model';
 @Component({
   selector: 'app-add-professeur',
   standalone: true,
@@ -17,6 +17,8 @@ export class AddProfesseurComponent implements OnInit {
   matieres!: Matiere[];
   newIdMat!: number;
   newMatiere!: Matiere;
+  uploadedImage!: File;
+  imagePath: any;
 
   constructor(
     private professeurService: ProfesseurService,
@@ -34,12 +36,26 @@ export class AddProfesseurComponent implements OnInit {
     this.newProfesseur.matiere = this.matieres.find(
       (mat) => mat.idMat == this.newIdMat,
     )!;
-
     this.professeurService
       .ajouterProfesseur(this.newProfesseur)
       .subscribe((prof) => {
-        console.log(prof);
-        this.router.navigate(['/professeurs']);
+        this.professeurService
+          .uploadImageFS(
+            this.uploadedImage,
+            this.uploadedImage.name,
+            prof.idProfesseur,
+          )
+          .subscribe((response: any) => {});
+        this.router.navigate(['professeurs']);
       });
+  }
+
+  onImageUpload(event: any) {
+    this.uploadedImage = event.target.files[0];
+    var reader = new FileReader();
+    reader.readAsDataURL(this.uploadedImage);
+    reader.onload = (_event) => {
+      this.imagePath = reader.result;
+    };
   }
 }

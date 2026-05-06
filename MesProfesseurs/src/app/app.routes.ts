@@ -8,6 +8,8 @@ import { ListeMatieresComponent } from './liste-matieres/liste-matieres.componen
 import { LoginComponent } from './login/login.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
 import { professeurGuard } from './professeur.guard';
+import { RegisterComponent } from './register/register.component';
+import { VerifEmailComponent } from './verif-email/verif-email.component';
 
 export const routes: Routes = [
   { path: 'professeurs', component: ProfesseursComponent },
@@ -16,11 +18,17 @@ export const routes: Routes = [
     component: AddProfesseurComponent,
     canActivate: [professeurGuard],
   },
-  { path: 'updateProfesseur/:id', component: UpdateProfesseurComponent },
+  {
+    path: 'updateProfesseur/:id',
+    component: UpdateProfesseurComponent,
+    canActivate: [professeurGuard],
+  },
   { path: 'rechercheParMatiere', component: RechercheParMatiereComponent },
   { path: 'rechercheParNom', component: RechercheParNomComponent },
   { path: 'listeMatieres', component: ListeMatieresComponent },
   { path: 'login', component: LoginComponent },
   { path: 'app-forbidden', component: ForbiddenComponent },
   { path: '', redirectTo: 'professeurs', pathMatch: 'full' },
+  { path: 'register', component: RegisterComponent },
+  { path: 'verifEmail', component: VerifEmailComponent },
 ];

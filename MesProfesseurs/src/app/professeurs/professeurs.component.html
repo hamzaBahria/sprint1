@@ -14,6 +14,7 @@
               <th>Salaire</th>
               <th>Date Création</th>
               <th>Matieres</th>
+              <th>Image</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -34,6 +35,15 @@
               <td>{{ professeur.salaireProfesseur }}</td>
               <td>{{ professeur.dateCreation | date: "dd/MM/yyyy" }}</td>
               <td>{{ professeur.matiere!.nomMatiere }}</td>
+              <td>
+                <img
+                  class="card-img-top img-responsive"
+                  src="{{
+                    apiurl + '/image/loadfromFS/' + professeur.idProfesseur
+                  }}"
+                  style="height: 50px; width: 100px"
+                />
+              </td>
               @if (authService.isAdmin()) {
                 <td>
                   <a

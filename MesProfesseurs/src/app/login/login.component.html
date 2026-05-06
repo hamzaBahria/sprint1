@@ -1,11 +1,14 @@
 <div class="container mt-5">
   <div class="row justify-content-md-center">
     <div class="col-md-4">
-      @if (err == 1) {
-        <div class="alert alert-danger">
-          <strong>login ou mot de passe erronés..</strong>
-        </div>
-      }
+      <div class="col-md-4">
+        @if (err == 1) {
+          <div class="alert alert-danger">
+            <strong>{{ message }}</strong>
+          </div>
+        }
+      </div>
+
       <form>
         <div class="form-group">
           <label>Nom Utilisateur :</label>
@@ -25,6 +28,10 @@
             class="form-control"
           />
         </div>
+        <p>
+          Vous n'avez pas un compte?
+          <a routerLink="/register">s'inscrire </a>
+        </p>
         <div class="row justify-content-md-center">
           <button
             type="button"
